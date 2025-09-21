@@ -1,6 +1,620 @@
-[
-  { "speaker": "You",      "text": "Selamat datang di JavaBrew!" },
-  { "speaker": "Customer", "text": "Aku pengen minuman hangat yang manis." },
-  { "speaker": "You",      "text": "Oke, buka rak bahan dan mesin brew.", "cmd": "SHOW_PANELS" },
-  { "speaker": "System",   "text": "Tip: pilih bahan di kanan atas, lalu BREW di kanan bawah." }
-]
+{
+  "schemaVersion": 1,
+  "days": {
+    "day1": {
+      "sadewa": {
+        "smalltalk": [
+          {
+            "speaker": "sadewa",
+            "line": "Brooo… sumpah ya, hari ini berasa panjang banget. Dari pagi duduk depan laptop, mata nempel layar terus. Pas berdiri, punggung langsung kayak kayu."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Waduh, gila lu kuat banget duduk seharian. Ga sempet gerak-gerak dikit gitu?"
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Hahaha, awalnya niat mau stretching, eh malah lupa. Tiba-tiba udah sore aja. Sekarang badan protes semua."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Yaelah, pantesan pegel. Nih, gue bikinin beras kencur hangat. Lumayan bikin badan lebih enteng."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Wih, mantap. Gaskeun. Abis ini gue mau rebahan bentar, biar ga jompo dini."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, beras kencur hangat. Minum pelan-pelan, biar angetnya nyerap."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Sip, makasih banyak! Badan gue udah kebayang lebih enteng."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "sadewa",
+              "line": "Wah, nendang juga rasanya. Besok-besok gue kudu rajin stretching."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Janjiin aja 5 menit tiap 1 jam. Badan lu bakal makasih."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "abipraya",
+              "trigger": "during_or_after_serving",
+              "weight": 0.6,
+              "exchanges": [
+                {
+                  "speaker": "abipraya",
+                  "line": "Woy Sad! Muka lu lecek banget, abis sparring sama deadline ya? wkwk"
+                },
+                {
+                  "speaker": "sadewa",
+                  "line": "Iya nih, punggung jadi papan triplek. Lu jangan nambahin beban mental woi."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Pas banget, Bi. Lu mau yang adem apa anget? Di sini lagi rame menu pemulihan badan."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "abipraya": {
+        "smalltalk": [
+          {
+            "speaker": "abipraya",
+            "line": "Yooo, selamat sore! Gila, tadi nongkrong rame banget, ngakak-ngakakan sama anak-anak. Tapi kebablasan, gue ngunyah gorengan kayak mesin, hahaha."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Wkwkwk, kalau udah nongkrong emang gitu, gorengan ga bisa berhenti. Abis berapa biji lo?"
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Jangan ditanya, Bro. Kayaknya sepiring sendiri abis sama gue. Sekarang perut gue kayak penuh minyak goreng, aduhh."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Hahaha, kena batunya lu. Sini gue racikin kunyit asem dingin. Nyegerin, sekalian nurunin minyaknya tuh."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Asik! Biar perut balik adem lagi. Emang lu penyelamat gue dah."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, kunyit asem dingin. Ademnya sampai ubun-ubun."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Wih… seger parah. Berasa dibilas dari dalam!"
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "abipraya",
+              "line": "Next time gue kudu batasi gorengan sih, minimal bukan sepiring sendirian."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Minimal selang-seling sama buah. Perut lu bakal lebih kalem."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "sadewa",
+              "trigger": "during_or_after_serving",
+              "weight": 0.5,
+              "exchanges": [
+                {
+                  "speaker": "sadewa",
+                  "line": "Bi, lu mah kuat bener urusan camilan. Tapi abis itu selalu kesini rehabilitasi."
+                },
+                {
+                  "speaker": "abipraya",
+                  "line": "Namanya juga siklus hidup. Gorengan → kunyit asem → hidup lagi."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Itu dia, paket bolak-balik. Gue siap jadi pit stop kalian."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "satria": {
+        "smalltalk": [
+          {
+            "speaker": "satria",
+            "line": "Permisi… aduh, kayaknya gue bakal tumbang nih. Udah beberapa malam gue begadang, kerjaan numpuk banget. Kepala jadi berat parah, rasanya kayak ada batu bata di atas."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Wah parah juga itu. Lu ngopi mulu apa gimana?"
+          },
+          {
+            "speaker": "satria",
+            "line": "Iya, ngopi terus biar ga ngantuk, tapi tetep aja. Mata melek, badan ga kuat."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Wajar sih, kopi mah cuma nahan dikit. Sini, gue bikinin wedang jahe madu. Anget, bikin rileks, kepala juga bisa agak plong."
+          },
+          {
+            "speaker": "satria",
+            "line": "Nice, makasih banget. Semoga abis ini bisa langsung pules tidur."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, wedang jahe madu. Tarik napas, hirup aromanya dulu."
+          },
+          {
+            "speaker": "satria",
+            "line": "Wah, wanginya nenangin. Berasa beban kepala turun dikit."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "satria",
+              "line": "Gue kudu kurangi kopi malam sih. Ternyata malah bikin melek tapi capek."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Coba ganti air hangat atau herbal tipis kalo lewat jam 8 malam."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "sadewa",
+              "trigger": "after_serving_only",
+              "weight": 0.4,
+              "exchanges": [
+                {
+                  "speaker": "sadewa",
+                  "line": "Tri, tidur cukup deh. Kalau tumbang, laporan juga keteter."
+                },
+                {
+                  "speaker": "satria",
+                  "line": "Bener, malam ini gue tepar dini. Thanks udah ngingetin."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "day2": {
+      "sadewa": {
+        "smalltalk": [
+          {
+            "speaker": "sadewa",
+            "line": "Bro, sumpah dari pagi kepala gue muter-muter. Kayak dunia spinning gitu. Padahal tadi cuma telat minum air doang kayaknya."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Waduh, itu sih klasik, kurang cairan bikin pusing. Lu udah makan belom?"
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Udah, cuma kayaknya badan masih nyari yang seger-seger."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Pas banget, gue bikinin kunyit asem dingin. Nyegerin, sekalian bikin kepala entengan."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Gas! Biar kepala gue ga muter-muter lagi kayak komedi putar."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, kunyit asem dingin. Segelas penuh penjernih pikiran."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Sejuk banget. Oke, pusingnya mulai kabur."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "sadewa",
+              "line": "Catet: minum air dulu sebelum kerja, jangan ketinggalan botol lagi."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Sama cemilan asin dikit biar elektrolitnya kebantu."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "abipraya",
+              "trigger": "during_or_after_serving",
+              "weight": 0.5,
+              "exchanges": [
+                {
+                  "speaker": "abipraya",
+                  "line": "Sad, pusing muter? Nonton timeline juga bisa bikin muter tuh."
+                },
+                {
+                  "speaker": "sadewa",
+                  "line": "Hahaha iya, detox timeline dulu kali ya."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Kalian detox timeline, gue siap detox lambung."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "abipraya": {
+        "smalltalk": [
+          {
+            "speaker": "abipraya",
+            "line": "Woyyy! Tadi pagi gue nekat lari jauh. Seru sih, tapi sekarang kaki gue keras banget, jalan aja kayak robot."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Wkwk, gaya banget lu Bi. Pantesan sekarang kaku, ga pake stretching abis lari ya?"
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Hehe iya keburu nyampe rumah, langsung rebahan. Eh malah sakit."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Yaudah gue racikin beras kencur. Pas banget buat recovery habis olahraga."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Wih mantap, gue percaya sama racikan lo nih."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, beras kencur. Minum sambil lurusin kaki, biar ototnya lebih rileks."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Uh enak, badan kaya di-*reset*."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "abipraya",
+              "line": "Besok gue paksa stretching. Jangan jadi robot lagi."
+            },
+            {
+              "speaker": "penjual",
+              "line": "5 menit cukup kok. Tambah kompres hangat, makin sip."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "satria",
+              "trigger": "during_or_after_serving",
+              "weight": 0.35,
+              "exchanges": [
+                {
+                  "speaker": "satria",
+                  "line": "Lu lari jauh tapi ga stretching, itu namanya cari masalah, Bi."
+                },
+                {
+                  "speaker": "abipraya",
+                  "line": "Mulut lu tajam, tapi bener sih."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Udah, minum dulu, nasihat lanjut belakangan."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "satria": {
+        "smalltalk": [
+          {
+            "speaker": "satria",
+            "line": "Permisi… tenggorokan gue seret parah. Tadi presentasi panjang banget, ngomong sampe mulut kering."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Wah, bisa kebayang tuh. Lu bawa minum ga pas presentasi?"
+          },
+          {
+            "speaker": "satria",
+            "line": "Ga sempet, keburu deg-degan juga. Jadinya sekarang seret abis."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Tenang, jahe madu hangat pas buat melembutin tenggorokan. Angetnya nyampek sampe ke dada."
+          },
+          {
+            "speaker": "satria",
+            "line": "Asik, racikin bang. Tenggorokan gue butuh pertolongan darurat."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, jahe madu hangat. Hirup uapnya sebentar sebelum diseruput."
+          },
+          {
+            "speaker": "satria",
+            "line": "Langsung lega. Oke, suara balik pelan-pelan."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "satria",
+              "line": "Catet, bawa botol minum pas presentasi."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Sama permen madu di kantong, jaga-jaga."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "abipraya",
+              "trigger": "after_serving_only",
+              "weight": 0.4,
+              "exchanges": [
+                {
+                  "speaker": "abipraya",
+                  "line": "Tri, suara lu udah balik? Besok gue ada pitching, pinjem tips dong."
+                },
+                {
+                  "speaker": "satria",
+                  "line": "Latihan napas dulu. Sisanya serahin ke jahe madu."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "day3": {
+      "sadewa": {
+        "smalltalk": [
+          {
+            "speaker": "sadewa",
+            "line": "Hadeh… badan gue ga enak semua, kayaknya masuk angin. Dari semalem udah ngerasa meriang."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Wah, anginnya nyangkut kali tuh. Udah dikerokin belom?"
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Belom, males banget. Mau langsung tidur juga susah."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Kalau gitu minum wedang jahe panas dulu. Biar anginnya keluar, badan juga anget lagi."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Wah iya tuh, bikinin ya, biar ga makin parah."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, wedang jahe panas. Pelan-pelan ya, masih ngebul."
+          },
+          {
+            "speaker": "sadewa",
+            "line": "Uh, angetnya enak. Kepala mulai ringan."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "sadewa",
+              "line": "Abis ini gue kerokin deh, biar tuntas."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Sip. Terus banyakin istirahat malam ini."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "satria",
+              "trigger": "during_or_after_serving",
+              "weight": 0.35,
+              "exchanges": [
+                {
+                  "speaker": "satria",
+                  "line": "Sad, kalau meriang jangan dipaksa kerja. Disconnect dulu."
+                },
+                {
+                  "speaker": "sadewa",
+                  "line": "Iya, gue cuti ngobrol sama bantal dulu."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Bantal dan selimut: duet andalan."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "abipraya": {
+        "smalltalk": [
+          {
+            "speaker": "abipraya",
+            "line": "Bro, semalem gue begadang nugas, kepala berat banget sekarang. Mata kayak ditempelin batu bata."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Ya ampun, jangan dipaksa mulu lah. Tidur cuma berapa jam?"
+          },
+          {
+            "speaker": "abipraya",
+            "line": "2 jam, wkwk. Besok juga masih lanjut."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Hadeh, ini sih perlu kunyit asem biar badan lu seger lagi. Walau ga gantiin tidur, lumayan lah."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Gas, yang penting bisa bangkit dikit lah."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, kunyit asem. Gulir pelan, biar sejuknya rata."
+          },
+          {
+            "speaker": "abipraya",
+            "line": "Hmm, segar. Batu batanya agak geser nih."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "abipraya",
+              "line": "Nanti gue tidur cepat deh, janji palsu yang sering gue langgar."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Mulai dari target sederhana: matiin layar jam 10 malam."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "sadewa",
+              "trigger": "after_serving_only",
+              "weight": 0.5,
+              "exchanges": [
+                {
+                  "speaker": "sadewa",
+                  "line": "Lu butuh libur dari begadang, Bi. Badan lu bukan powerbank."
+                },
+                {
+                  "speaker": "abipraya",
+                  "line": "Hahaha noted. Besok gue mode hemat energi."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "satria": {
+        "smalltalk": [
+          {
+            "speaker": "satria",
+            "line": "Seharian perut gue kembung, Bro. Rasanya kayak ada balon di dalem, ga enak banget."
+          },
+          {
+            "speaker": "penjual",
+            "line": "Pasti gara-gara makan buru-buru atau kebanyakan minum es tuh."
+          },
+          {
+            "speaker": "satria",
+            "line": "Bener juga kayaknya. Tadi siang kebanyakan es teh."
+          }
+        ],
+        "order": [
+          {
+            "speaker": "penjual",
+            "line": "Kalau gitu gue racikin kunyit campur serai. Manjur banget buat kempesin perut kembung."
+          },
+          {
+            "speaker": "satria",
+            "line": "Asik, gas racikin dah."
+          }
+        ],
+        "serving": [
+          {
+            "speaker": "penjual",
+            "line": "Ini pesanannya, kunyit-serai. Aromanya lembut, perut jadi adem."
+          },
+          {
+            "speaker": "satria",
+            "line": "Pas banget. Kembungnya mulai reda."
+          }
+        ],
+        "post_serving": {
+          "self": [
+            {
+              "speaker": "satria",
+              "line": "Catet: makan pelan, kurangi es dulu."
+            },
+            {
+              "speaker": "penjual",
+              "line": "Good. Tambah hangat-hangat dikit abis makan, perut lebih santuy."
+            }
+          ],
+          "cameos": [
+            {
+              "partner": "abipraya",
+              "trigger": "during_or_after_serving",
+              "weight": 0.4,
+              "exchanges": [
+                {
+                  "speaker": "abipraya",
+                  "line": "Tri, mau gue titip cemilan non-es? Biar ga kambuh."
+                },
+                {
+                  "speaker": "satria",
+                  "line": "Deal. Asal bukan gorengan legenda lu, ya."
+                },
+                {
+                  "speaker": "penjual",
+                  "line": "Tenang, gue *filter* dulu sebelum masuk."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
