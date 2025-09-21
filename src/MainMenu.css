@@ -1,0 +1,58 @@
+/* Kanvas */
+.start-root{
+  width:100vw;height:100vh;position:relative;overflow:hidden;
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+
+  /* Geser menu dari sini supaya nempel di bawah "RAMU JAMU" */
+  --menu-x: 55%;     /* 0% kiri — 100% kanan */
+  --menu-y: 51%;     /* 0% atas — 100% bawah */
+
+  /* Skala font dan jarak */
+  --font: clamp(18px, 1.8vw, 28px);
+  --gap: clamp(12px, 1.2vw, 18px);
+
+  /* Warna krem ala Coffee Talk */
+  --cream: #E8E0BA;
+  --cream-dim: #CFC7A1;
+}
+
+/* ====== LIST ala Coffee Talk ====== */
+.ct-list{
+  list-style:none;margin:0;padding:0;
+  position:absolute;left:var(--menu-x);top:var(--menu-y);
+  transform:translate(-50%,0);           /* anchor tengah-x */
+  display:flex;flex-direction:column;gap:var(--gap);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 800;letter-spacing: 0.08em;
+  font-size: var(--font);
+  letter-spacing: 0;
+  color: var(--cream-dim);
+  user-select:none;
+  /* Garis vertikal tipis di sisi kanan list */
+}
+.ct-list::after{
+  content:"";
+  position:absolute;right:-18px;top:0;bottom:0;
+  width:1px;background: rgba(232,224,186,0.6);
+}
+
+/* Item polos tanpa card/shadow */
+.ct-item{
+  padding: 2px 0; cursor:pointer; position:relative;
+  transition: transform .06s ease, color .1s ease;
+  outline:none;
+}
+.ct-item:hover{ transform: translateX(2px); color: var(--cream); }
+
+/* Panah indikator di KANAN item aktif; simple segitiga CSS */
+.ct-item.is-active{ color: var(--cream); }
+.ct-item.is-active::after{
+  content:""; position:absolute; right:-28px; top:50%; transform:translateY(-50%);
+  width:0;height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-left:12px solid var(--cream);   /* ← panah menghadap kiri */
+}
+
+/* (Opsional) untuk nuansa pixel yang lebih crisp, matikan anti-alias di WebKit: */
+/* .ct-item{ -webkit-font-smoothing:none; } */

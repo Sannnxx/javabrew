@@ -1,0 +1,6 @@
+[
+  { "speaker": "You",      "text": "Selamat datang di JavaBrew!" },
+  { "speaker": "Customer", "text": "Aku pengen minuman hangat yang manis." },
+  { "speaker": "You",      "text": "Oke, buka rak bahan dan mesin brew.", "cmd": "SHOW_PANELS" },
+  { "speaker": "System",   "text": "Tip: pilih bahan di kanan atas, lalu BREW di kanan bawah." }
+]
