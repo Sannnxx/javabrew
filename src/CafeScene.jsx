@@ -112,11 +112,11 @@ const buildCharacterScript = (data, dayKey = DEFAULT_DAY, characterKey = DEFAULT
   };
 
   pushMany(scenario.smalltalk, () => ({ origin: "smalltalk" }));
-  pushMany(scenario.order, () => ({ origin: "order" }));
-  pushMany(scenario.serving, (_entry, idx, arr) => ({
-    origin: "serving",
+  pushMany(scenario.order, (_entry, idx, arr) => ({
+    origin: "order",
     cmd: idx === arr.length - 1 ? "SHOW_PANELS" : undefined,
   }));
+  pushMany(scenario.serving, () => ({ origin: "serving" }));
   drainCameos("during_or_after_serving");
   pushMany(scenario.post_serving?.self, () => ({ origin: "post_serving" }));
   drainCameos("after_serving_only");
@@ -350,7 +350,7 @@ export default function CafeScene() {
       )}
 
       {/* Dialog dari JSON */}
-      <DialogBox line={currentLine} onNext={advanceLine} disabled={brewStepActive} />
+      <DialogBox line={brewStepActive ? null : currentLine} onNext={advanceLine} disabled={brewStepActive} />
     </div>
   );
 }

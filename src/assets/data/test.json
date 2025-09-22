@@ -48,27 +48,7 @@
               "line": "Janjiin aja 5 menit tiap 1 jam. Badan lu bakal makasih."
             }
           ],
-          "cameos": [
-            {
-              "partner": "abipraya",
-              "trigger": "during_or_after_serving",
-              "weight": 0.6,
-              "exchanges": [
-                {
-                  "speaker": "abipraya",
-                  "line": "Woy Sad! Muka lu lecek banget, abis sparring sama deadline ya? wkwk"
-                },
-                {
-                  "speaker": "sadewa",
-                  "line": "Iya nih, punggung jadi papan triplek. Lu jangan nambahin beban mental woi."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Pas banget, Bi. Lu mau yang adem apa anget? Di sini lagi rame menu pemulihan badan."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "abipraya": {
@@ -117,27 +97,7 @@
               "line": "Minimal selang-seling sama buah. Perut lu bakal lebih kalem."
             }
           ],
-          "cameos": [
-            {
-              "partner": "sadewa",
-              "trigger": "during_or_after_serving",
-              "weight": 0.5,
-              "exchanges": [
-                {
-                  "speaker": "sadewa",
-                  "line": "Bi, lu mah kuat bener urusan camilan. Tapi abis itu selalu kesini rehabilitasi."
-                },
-                {
-                  "speaker": "abipraya",
-                  "line": "Namanya juga siklus hidup. Gorengan → kunyit asem → hidup lagi."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Itu dia, paket bolak-balik. Gue siap jadi pit stop kalian."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "satria": {
@@ -186,23 +146,7 @@
               "line": "Coba ganti air hangat atau herbal tipis kalo lewat jam 8 malam."
             }
           ],
-          "cameos": [
-            {
-              "partner": "sadewa",
-              "trigger": "after_serving_only",
-              "weight": 0.4,
-              "exchanges": [
-                {
-                  "speaker": "sadewa",
-                  "line": "Tri, tidur cukup deh. Kalau tumbang, laporan juga keteter."
-                },
-                {
-                  "speaker": "satria",
-                  "line": "Bener, malam ini gue tepar dini. Thanks udah ngingetin."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       }
     },
@@ -253,27 +197,7 @@
               "line": "Sama cemilan asin dikit biar elektrolitnya kebantu."
             }
           ],
-          "cameos": [
-            {
-              "partner": "abipraya",
-              "trigger": "during_or_after_serving",
-              "weight": 0.5,
-              "exchanges": [
-                {
-                  "speaker": "abipraya",
-                  "line": "Sad, pusing muter? Nonton timeline juga bisa bikin muter tuh."
-                },
-                {
-                  "speaker": "sadewa",
-                  "line": "Hahaha iya, detox timeline dulu kali ya."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Kalian detox timeline, gue siap detox lambung."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "abipraya": {
@@ -322,27 +246,7 @@
               "line": "5 menit cukup kok. Tambah kompres hangat, makin sip."
             }
           ],
-          "cameos": [
-            {
-              "partner": "satria",
-              "trigger": "during_or_after_serving",
-              "weight": 0.35,
-              "exchanges": [
-                {
-                  "speaker": "satria",
-                  "line": "Lu lari jauh tapi ga stretching, itu namanya cari masalah, Bi."
-                },
-                {
-                  "speaker": "abipraya",
-                  "line": "Mulut lu tajam, tapi bener sih."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Udah, minum dulu, nasihat lanjut belakangan."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "satria": {
@@ -391,23 +295,7 @@
               "line": "Sama permen madu di kantong, jaga-jaga."
             }
           ],
-          "cameos": [
-            {
-              "partner": "abipraya",
-              "trigger": "after_serving_only",
-              "weight": 0.4,
-              "exchanges": [
-                {
-                  "speaker": "abipraya",
-                  "line": "Tri, suara lu udah balik? Besok gue ada pitching, pinjem tips dong."
-                },
-                {
-                  "speaker": "satria",
-                  "line": "Latihan napas dulu. Sisanya serahin ke jahe madu."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       }
     },
@@ -458,27 +346,7 @@
               "line": "Sip. Terus banyakin istirahat malam ini."
             }
           ],
-          "cameos": [
-            {
-              "partner": "satria",
-              "trigger": "during_or_after_serving",
-              "weight": 0.35,
-              "exchanges": [
-                {
-                  "speaker": "satria",
-                  "line": "Sad, kalau meriang jangan dipaksa kerja. Disconnect dulu."
-                },
-                {
-                  "speaker": "sadewa",
-                  "line": "Iya, gue cuti ngobrol sama bantal dulu."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Bantal dan selimut: duet andalan."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "abipraya": {
@@ -527,23 +395,7 @@
               "line": "Mulai dari target sederhana: matiin layar jam 10 malam."
             }
           ],
-          "cameos": [
-            {
-              "partner": "sadewa",
-              "trigger": "after_serving_only",
-              "weight": 0.5,
-              "exchanges": [
-                {
-                  "speaker": "sadewa",
-                  "line": "Lu butuh libur dari begadang, Bi. Badan lu bukan powerbank."
-                },
-                {
-                  "speaker": "abipraya",
-                  "line": "Hahaha noted. Besok gue mode hemat energi."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       },
       "satria": {
@@ -592,27 +444,7 @@
               "line": "Good. Tambah hangat-hangat dikit abis makan, perut lebih santuy."
             }
           ],
-          "cameos": [
-            {
-              "partner": "abipraya",
-              "trigger": "during_or_after_serving",
-              "weight": 0.4,
-              "exchanges": [
-                {
-                  "speaker": "abipraya",
-                  "line": "Tri, mau gue titip cemilan non-es? Biar ga kambuh."
-                },
-                {
-                  "speaker": "satria",
-                  "line": "Deal. Asal bukan gorengan legenda lu, ya."
-                },
-                {
-                  "speaker": "penjual",
-                  "line": "Tenang, gue *filter* dulu sebelum masuk."
-                }
-              ]
-            }
-          ]
+          "cameos": []
         }
       }
     }
