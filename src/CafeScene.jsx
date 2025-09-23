@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+﻿import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import lobbyBg from "./assets/images/lobby.png";
 import IngredientRoom from "./components/IngredientRoom";
 import BrewRoom from "./components/BrewRoom";
@@ -9,9 +9,38 @@ import satriaSprite from "./assets/sprites/Satria.png";
 
 // Vite/CRA modern bisa import JSON langsung
 import introDialog from "./assets/data/test.json";
+import recipeBook from "./assets/data/recipes.json";
 
 const DEFAULT_DAY = "day1";
 const DEFAULT_CHARACTER = "sadewa";
+
+const RECIPE_LIBRARY = recipeBook?.recipes ?? {};
+const ORDER_LIBRARY = recipeBook?.orders ?? {};
+
+const NOTE_TONES = {
+  info: { background: "#fef3c7", border: "#b45309" },
+  success: { background: "#dcfce7", border: "#15803d" },
+  error: { background: "#fee2e2", border: "#b91c1c" },
+  warning: { background: "#fef9c3", border: "#a16207" },
+};
+const DEFAULT_NOTE_TONE = NOTE_TONES.info;
+
+const hasCmd = (cmd, target) => (Array.isArray(cmd) ? cmd.includes(target) : cmd === target);
+
+const findRecipeForScenario = (dayKey, characterKey) => {
+  if (!dayKey || !characterKey) return null;
+  const recipeKey = ORDER_LIBRARY?.[dayKey]?.[characterKey];
+  if (!recipeKey) return null;
+  const recipe = RECIPE_LIBRARY?.[recipeKey];
+  if (!recipe) return null;
+  return { key: recipeKey, ...recipe };
+};
+
+const formatTitleCase = (value) => {
+  if (!value) return "";
+  const str = value.toString();
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 const CHARACTER_SPRITES = {
   sadewa: sadewaSprite,
@@ -25,7 +54,6 @@ const CHARACTER_LAYOUT = {
   satria: { left: "74%", bottom: "15%", scale: 0.28 },
 };
 
-
 const CAMERA_PRESETS = {
   default: { x: 50, y: 55, zoom: 1 },
   bar: { x: 44, y: 55, zoom: 1.05 },
@@ -33,7 +61,6 @@ const CAMERA_PRESETS = {
   abipraya: { x: 54, y: 60, zoom: 1.12 },
   satria: { x: 74, y: 60, zoom: 1.12 },
 };
-
 
 const mixTargets = (a, b) => {
   if (!a && !b) return CAMERA_PRESETS.default;
@@ -145,12 +172,25 @@ export default function CafeScene() {
   const [brewStepActive, setBrewStepActive] = useState(false);
   const [queuedIdx, setQueuedIdx] = useState(null);
   const [idx, setIdx] = useState(0);
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [activeRecipe, setActiveRecipe] = useState(null);
+  const [floatingNote, setFloatingNote] = useState(null);
+  const floatingTimerRef = useRef(null);
+
+  const selectedIngredientKeys = useMemo(() => selectedIngredients.map((item) => item.key), [selectedIngredients]);
   const lines = useMemo(() => buildCharacterScript(introDialog), []);
   const [camera, setCamera] = useState(CAMERA_PRESETS.default);
 
   useEffect(() => {
     const im = new Image();
     im.src = lobbyBg;
+  }, []);
+
+  useEffect(() => () => {
+    if (floatingTimerRef.current) {
+      clearTimeout(floatingTimerRef.current);
+      floatingTimerRef.current = null;
+    }
   }, []);
 
   const applyCmd = useCallback((cmd) => {
@@ -174,21 +214,88 @@ export default function CafeScene() {
     return hold;
   }, []);
 
+  const setManagedFloatingNote = useCallback((note) => {
+    setFloatingNote(note);
+    if (floatingTimerRef.current) {
+      clearTimeout(floatingTimerRef.current);
+      floatingTimerRef.current = null;
+    }
+    if (note?.duration) {
+      floatingTimerRef.current = setTimeout(() => {
+        setFloatingNote((current) => (current?.id === note.id ? null : current));
+        floatingTimerRef.current = null;
+      }, note.duration);
+    }
+  }, []);
+
+  const dismissFloatingNote = useCallback(() => {
+    if (floatingTimerRef.current) {
+      clearTimeout(floatingTimerRef.current);
+      floatingTimerRef.current = null;
+    }
+    setFloatingNote(null);
+  }, []);
+
   const advanceLine = useCallback(() => {
     if (!lines.length) return;
     if (brewStepActive) return;
     const line = lines[idx];
     const maxIdx = lines.length - 1;
     let hold = false;
-    if (line?.cmd) hold = applyCmd(line.cmd);
+
+    if (line?.cmd) {
+      if (hasCmd(line.cmd, "SHOW_PANELS")) {
+        const recipe = findRecipeForScenario(line.day ?? DEFAULT_DAY, line.character ?? DEFAULT_CHARACTER);
+        setActiveRecipe(recipe);
+        setSelectedIngredients([]);
+        if (recipe) {
+          const listText = recipe.ingredients.map((entry) => entry.label).join(", ");
+          setManagedFloatingNote({
+            id: `info-${Date.now()}`,
+            type: "info",
+            title: `${formatTitleCase(line.character ?? recipe.label)} memesan ${recipe.label}`,
+            body: `Campurkan: ${listText}`,
+          });
+        } else {
+          setManagedFloatingNote({
+            id: `warn-${Date.now()}`,
+            type: "warning",
+            title: "Resep belum tercatat",
+            body: "Catat dulu kombinasi jamu sebelum menyeduh.",
+          });
+        }
+      }
+      hold = applyCmd(line.cmd);
+    }
+
     if (hold) {
       setQueuedIdx(Math.min(idx + 1, maxIdx));
       return;
     }
     setIdx((n) => Math.min(n + 1, maxIdx));
-  }, [applyCmd, brewStepActive, idx, lines]);
+  }, [applyCmd, brewStepActive, idx, lines, setManagedFloatingNote]);
+
+  const handleIngredientPick = useCallback((item) => {
+    if (!item || !item.key) return;
+    setSelectedIngredients((prev) => {
+      const filtered = prev.filter((entry) => entry.key !== item.key);
+      if (filtered.length !== prev.length) {
+        return filtered;
+      }
+      if (filtered.length >= 3) {
+        return prev;
+      }
+      return [...filtered, item];
+    });
+  }, []);
+
+  const handleResetBrew = useCallback(() => {
+    setSelectedIngredients([]);
+  }, []);
 
   const handleBrewComplete = useCallback(() => {
+    setSelectedIngredients([]);
+    setActiveRecipe(null);
     applyCmd("HIDE_PANELS");
     if (queuedIdx !== null) {
       setIdx(queuedIdx);
@@ -196,27 +303,76 @@ export default function CafeScene() {
     }
   }, [applyCmd, queuedIdx]);
 
+  const handleBrew = useCallback(() => {
+    if (!selectedIngredientKeys.length) return;
+
+    if (!activeRecipe) {
+      setManagedFloatingNote({
+        id: `info-${Date.now()}`,
+        type: "info",
+        title: "Belum ada pesanan",
+        body: "Tunggu sampai order masuk sebelum menyeduh.",
+        duration: 2400,
+      });
+      return;
+    }
+
+    const expectedExtras = activeRecipe.ingredients
+      .map((entry) => entry.key)
+      .filter((key) => key && key !== "air");
+
+    const selectedSet = new Set(selectedIngredientKeys);
+    const isMatch = expectedExtras.length === selectedSet.size && expectedExtras.every((key) => selectedSet.has(key));
+
+    if (isMatch) {
+      const successList = activeRecipe.ingredients.map((entry) => entry.label).join(", ");
+      setManagedFloatingNote({
+        id: `success-${Date.now()}`,
+        type: "success",
+        title: `${activeRecipe.label} siap disajikan`,
+        body: `Campuran: ${successList}`,
+        duration: 3000,
+      });
+      handleBrewComplete();
+      return;
+    }
+
+    const extrasLabel = activeRecipe.ingredients
+      .filter((entry) => entry.key !== "air")
+      .map((entry) => entry.label);
+    const expectedCaption = ["Air", ...extrasLabel].join(", ");
+
+    setManagedFloatingNote({
+      id: `error-${Date.now()}`,
+      type: "error",
+      title: "Resep belum pas",
+      body: `Gunakan: ${expectedCaption}`,
+    });
+
+    setSelectedIngredients([]);
+  }, [activeRecipe, handleBrewComplete, selectedIngredientKeys, setManagedFloatingNote]);
+
   const currentLine = lines[idx] ?? null;
 
   useEffect(() => {
     const target = currentLine
       ? (() => {
-          if (currentLine.origin === "cameo") {
-            const mainKey = toCharacterKey(currentLine.character);
-            const cameoKey = toCharacterKey(currentLine.cameoPartner);
-            const mainTarget = mainKey ? CAMERA_PRESETS[mainKey] : null;
-            const cameoTarget = cameoKey ? CAMERA_PRESETS[cameoKey] : null;
-            return mixTargets(mainTarget, cameoTarget);
-          }
-          const speakerKey = toCharacterKey(currentLine.speaker);
-          if (speakerKey && CAMERA_PRESETS[speakerKey]) return CAMERA_PRESETS[speakerKey];
-          if (currentLine.speaker && currentLine.speaker.toLowerCase() === "penjual") {
-            return CAMERA_PRESETS.bar;
-          }
-          const scenarioKey = toCharacterKey(currentLine.character);
-          if (scenarioKey && CAMERA_PRESETS[scenarioKey]) return CAMERA_PRESETS[scenarioKey];
-          return CAMERA_PRESETS.default;
-        })()
+        if (currentLine.origin === "cameo") {
+          const mainKey = toCharacterKey(currentLine.character);
+          const cameoKey = toCharacterKey(currentLine.cameoPartner);
+          const mainTarget = mainKey ? CAMERA_PRESETS[mainKey] : null;
+          const cameoTarget = cameoKey ? CAMERA_PRESETS[cameoKey] : null;
+          return mixTargets(mainTarget, cameoTarget);
+        }
+        const speakerKey = toCharacterKey(currentLine.speaker);
+        if (speakerKey && CAMERA_PRESETS[speakerKey]) return CAMERA_PRESETS[speakerKey];
+        if (currentLine.speaker && currentLine.speaker.toLowerCase() === "penjual") {
+          return CAMERA_PRESETS.bar;
+        }
+        const scenarioKey = toCharacterKey(currentLine.character);
+        if (scenarioKey && CAMERA_PRESETS[scenarioKey]) return CAMERA_PRESETS[scenarioKey];
+        return CAMERA_PRESETS.default;
+      })()
       : CAMERA_PRESETS.default;
     setCamera(target);
   }, [currentLine]);
@@ -256,6 +412,13 @@ export default function CafeScene() {
     }
     return set;
   }, [currentLine]);
+
+  const floatingTone = useMemo(() => NOTE_TONES[floatingNote?.type] ?? DEFAULT_NOTE_TONE, [floatingNote]);
+  const floatingPositionStyle = useMemo(() => (
+  showPanels
+    ? { top: "6%", left: "4%", transform: "none" }
+    : { top: "8%", left: "4%", transform: "none" }
+), [showPanels]);
 
   const backgroundStyle = useMemo(() => ({
     position: "absolute",
@@ -319,6 +482,54 @@ export default function CafeScene() {
         </div>
       </div>
 
+      {floatingNote && (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 10,
+            padding: "12px 16px 10px",
+            borderRadius: 12,
+            boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
+            width: "min(320px, 70vw)",
+            background: floatingTone.background,
+            border: `2px solid ${floatingTone.border}`,
+            fontFamily: "'VT323', monospace",
+            color: "#2b2312",
+            pointerEvents: "auto",
+            ...floatingPositionStyle,
+          }}
+        >
+          <button
+            type="button"
+            onClick={dismissFloatingNote}
+            style={{
+              position: "absolute",
+              top: 6,
+              right: 8,
+              background: "transparent",
+              border: "none",
+              color: floatingTone.border,
+              fontSize: 18,
+              lineHeight: 1,
+              cursor: "pointer",
+            }}
+            aria-label="Tutup catatan"
+          >
+            x
+          </button>
+          {floatingNote.title && (
+            <div style={{ fontSize: 18, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
+              {floatingNote.title}
+            </div>
+          )}
+          {floatingNote.body && (
+            <div style={{ fontSize: 20, lineHeight: 1.15, whiteSpace: "pre-line" }}>
+              {floatingNote.body}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Panel kanan muncul setelah dapat cmd SHOW_PANELS */}
       {showPanels && (
         <div
@@ -334,18 +545,18 @@ export default function CafeScene() {
         >
           <div style={{ gridArea: "left" }} />
           <div style={{ gridArea: "rightTop", pointerEvents: "auto" }}>
-            <IngredientRoom onPick={(k) => console.log("pick:", k)} />
+            <IngredientRoom onPick={handleIngredientPick} selectedKeys={selectedIngredientKeys} />
           </div>
           <div style={{ gridArea: "rightBottom", pointerEvents: "auto" }}>
             <BrewRoom
-              onReset={() => console.log("reset")}
-              onBrew={handleBrewComplete}
+              selectedItems={selectedIngredients}
+              onReset={handleResetBrew}
+              onBrew={handleBrew}
             />
           </div>
 
-          {/* garis pemisah */}
-          <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:8, background:"#000", transform:"translateX(-4px)" }} />
-          <div style={{ position:"absolute", left:"50%", right:0, top:"50%", height:8, background:"#000", transform:"translateY(-4px)" }} />
+          <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 8, background: "#000", transform: "translateX(-4px)" }} />
+          <div style={{ position: "absolute", left: "50%", right: 0, top: "50%", height: 8, background: "#000", transform: "translateY(-4px)" }} />
         </div>
       )}
 

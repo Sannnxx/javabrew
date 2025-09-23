@@ -1,0 +1,39 @@
+﻿{
+  "schemaVersion": 1,
+  "recipes": {
+    "beras_kencur": {
+      "label": "Beras Kencur",
+      "ingredients": [
+        { "key": "air", "label": "Air" },
+        { "key": "beras", "label": "Beras" },
+        { "key": "kencur", "label": "Kencur" },
+        { "key": "gula_aren", "label": "Gula Aren" }
+      ]
+    },
+    "kunyit_asem": {
+      "label": "Kunyit Asem",
+      "ingredients": [
+        { "key": "air", "label": "Air" },
+        { "key": "kunyit", "label": "Kunyit" },
+        { "key": "asam_jawa", "label": "Asam Jawa" },
+        { "key": "gula_aren", "label": "Gula Aren" }
+      ]
+    },
+    "wedang_jahe_madu_sereh": {
+      "label": "Wedang Jahe Madu Sereh",
+      "ingredients": [
+        { "key": "air", "label": "Air" },
+        { "key": "jahe", "label": "Jahe" },
+        { "key": "madu", "label": "Madu" },
+        { "key": "sereh", "label": "Sereh" }
+      ]
+    }
+  },
+  "orders": {
+    "day1": {
+      "sadewa": "beras_kencur",
+      "abipraya": "kunyit_asem",
+      "satria": "wedang_jahe_madu_sereh"
+    }
+  }
+}

@@ -1,36 +1,68 @@
-import React from "react";
-import "./coffee-ui.css";
+import React, { useMemo } from "react";
+import "./spice-ui.css";
 
-export default function BrewRoom({ slots = ["BASE", "—", "—"], onReset, onBrew }) {
+import brewroomBg from "../assets/images/brewroom.png";
+
+const BASE_SLOT = {
+  key: "base",
+  label: "Air",
+  isBase: true,
+};
+
+export default function BrewRoom({ selectedItems = [], onReset, onBrew }) {
+  const slots = useMemo(() => {
+    const extras = selectedItems.slice(0, 3).map((item, idx) => ({
+      key: item.key ?? `slot-${idx}`,
+      label: item.label ?? "",
+      image: item.image,
+    }));
+    while (extras.length < 3) {
+      extras.push({ key: `empty-${extras.length}`, label: "-", isEmpty: true });
+    }
+    return [BASE_SLOT, ...extras];
+  }, [selectedItems]);
+
+  const canBrew = selectedItems.length > 0;
+
   return (
-    <div className="panel p-12">
-      <div className="brew-box">
-        <div className="slots">
-          {slots.map((s, i) => (
-            <div key={i} className="slot">
-              <span className="slot-text">{s}</span>
-            </div>
-          ))}
-        </div>
+    <div className="panel brew-room">
+      <div className="brew-room__bg" style={{ backgroundImage: `url(${brewroomBg})` }} />
 
-        <div className="gauges">
-          {["WARM", "COOL", "SWEET", "BITTER"].map((g) => (
-            <div key={g} className="gauge-row">
-              <div className="gauge-label">{g}</div>
-              <div className="gauge-bar">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <span key={i} className={`tick ${i < 3 ? "on" : ""}`} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="brew-room__slots">
+        {slots.map((slot) => (
+          <div
+            key={slot.key}
+            className={`brew-room__slot ${slot.isBase ? "is-base" : ""} ${slot.isEmpty ? "is-empty" : ""}`}
+          >
+            {slot.image ? (
+              <img className="brew-room__slot-img" src={slot.image} alt={slot.label} />
+            ) : (
+              <span className="brew-room__slot-placeholder">{slot.label}</span>
+            )}
+          </div>
+        ))}
+      </div>
 
-        <div className="brew-actions">
-          <button className="btn ghost" onClick={onReset}>RESET</button>
-          <button className="btn solid" onClick={onBrew}>BREW</button>
-        </div>
+      <div className="brew-room__labels">
+        {slots.map((slot) => (
+          <span key={`${slot.key}-label`} className="brew-room__slot-label">
+            {slot.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="brew-room__actions">
+        <button type="button" className="btn ghost" onClick={onReset}>RESET</button>
+        <button
+          type="button"
+          className="btn solid"
+          onClick={canBrew ? onBrew : undefined}
+          disabled={!canBrew}
+        >
+          BREW
+        </button>
       </div>
     </div>
   );
 }
+

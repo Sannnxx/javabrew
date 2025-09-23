@@ -1,0 +1,212 @@
+:root {
+  --cream: #E8E0BA;
+  --cream-dim: #CFC7A1;
+  --ink: #0a0a0a;
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  color: var(--cream);
+  image-rendering: pixelated;
+}
+
+.p-12 {
+  padding: 12px;
+}
+
+/* IngredientRoom */
+.ingredient-room {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ingredient-room__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: saturate(0.92);
+}
+
+.ingredient-room__grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(110px, 1fr));
+  padding: 48px 64px 28px;
+  gap: 24px 20px;
+  align-content: center;
+  justify-items: center;
+  pointer-events: none;
+}
+
+.ingredient-room__item {
+  pointer-events: auto;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transform-origin: center bottom;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.ingredient-room__item:hover {
+  transform: translateY(-4px) scale(1.04);
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.35));
+}
+
+.ingredient-room__item.is-selected {
+  transform: translateY(-6px) scale(1.05);
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.45));
+}
+
+.ingredient-room__item-img {
+  width: 88px;
+  height: 88px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35));
+}
+
+.ingredient-room__item-label {
+  display: inline-block;
+  padding: 6px 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: #261f0f;
+  background: rgba(243, 233, 198, 0.95);
+  border: 2px solid #2a1d12;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.ingredient-room__item.is-selected .ingredient-room__item-label {
+  background: rgba(255, 244, 205, 0.98);
+}
+
+/* BrewRoom */
+.brew-room {
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.brew-room__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: saturate(0.95);
+}
+
+.brew-room__slots {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+  right: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brew-room__slot {
+  height: 60px;
+  background: rgba(243, 233, 198, 0.92);
+  border: 2px solid #2a1d12;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+  gap: 16px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.brew-room__slot.is-base {
+  background: rgba(205, 232, 255, 0.95);
+}
+
+.brew-room__slot.is-empty {
+  opacity: 0.6;
+}
+
+.brew-room__slot-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35));
+}
+
+.brew-room__slot-placeholder {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #2b2312;
+}
+
+.brew-room__labels {
+  position: absolute;
+  top: 60px;
+  right: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 58px;
+  text-align: right;
+}
+
+.brew-room__slot-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  color: #f3e9c6;
+  text-shadow: 2px 2px 0 #2a1d12;
+}
+
+.brew-room__actions {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 64px;
+  display: flex;
+  gap: 16px;
+}
+
+.btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 2px solid #2a1d12;
+}
+
+.btn.ghost {
+  background: #d6caa8;
+  color: #2b2312;
+}
+
+.btn.solid {
+  background: #2b2312;
+  color: #E8E0BA;
+  transition: transform 0.08s ease;
+}
+
+.btn.solid:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  transform: none;
+}
+
+.btn.solid:not(:disabled):active {
+  transform: translateY(2px);
+}
