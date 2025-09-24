@@ -6,6 +6,7 @@ import DialogBox from "./DialogBox";
 import sadewaSprite from "./assets/sprites/Sadewa.png";
 import abiprayaSprite from "./assets/sprites/Abipraya.png";
 import satriaSprite from "./assets/sprites/Satria.png";
+import jamuCupImg from "./assets/jamu/cangkir.png";
 
 // Vite/CRA modern bisa import JSON langsung
 import introDialog from "./assets/data/test.json";
@@ -176,6 +177,10 @@ export default function CafeScene() {
   const [activeRecipe, setActiveRecipe] = useState(null);
   const [floatingNote, setFloatingNote] = useState(null);
   const floatingTimerRef = useRef(null);
+  const [successProgress, setSuccessProgress] = useState(0);
+  const [successMarkVisible, setSuccessMarkVisible] = useState(false);
+  const [awaitingSuccessCompletion, setAwaitingSuccessCompletion] = useState(false);
+  const successTimerRef = useRef(null);
 
   const selectedIngredientKeys = useMemo(() => selectedIngredients.map((item) => item.key), [selectedIngredients]);
   const lines = useMemo(() => buildCharacterScript(introDialog), []);
@@ -190,6 +195,10 @@ export default function CafeScene() {
     if (floatingTimerRef.current) {
       clearTimeout(floatingTimerRef.current);
       floatingTimerRef.current = null;
+    }
+    if (successTimerRef.current) {
+      clearInterval(successTimerRef.current);
+      successTimerRef.current = null;
     }
   }, []);
 
@@ -228,14 +237,53 @@ export default function CafeScene() {
     }
   }, []);
 
+  const clearSuccessTimer = useCallback(() => {
+    if (successTimerRef.current) {
+      clearInterval(successTimerRef.current);
+      successTimerRef.current = null;
+    }
+  }, []);
+
   const dismissFloatingNote = useCallback(() => {
+    if (floatingNote?.type === "success" && awaitingSuccessCompletion && !successMarkVisible) {
+      return;
+    }
     if (floatingTimerRef.current) {
       clearTimeout(floatingTimerRef.current);
       floatingTimerRef.current = null;
     }
+    clearSuccessTimer();
+    setSuccessProgress(0);
+    setSuccessMarkVisible(false);
+    setAwaitingSuccessCompletion(false);
     setFloatingNote(null);
-  }, []);
+  }, [awaitingSuccessCompletion, clearSuccessTimer, floatingNote, successMarkVisible]);
 
+  useEffect(() => {
+    clearSuccessTimer();
+    if (floatingNote?.type !== "success") {
+      setSuccessProgress(0);
+      setSuccessMarkVisible(false);
+      setAwaitingSuccessCompletion(false);
+      return undefined;
+    }
+
+    setSuccessProgress(0);
+    setSuccessMarkVisible(false);
+    let current = 0;
+    const step = () => {
+      current = Math.min(current + 1, 100);
+      setSuccessProgress(current);
+      if (current >= 100) {
+        setSuccessMarkVisible(true);
+        clearSuccessTimer();
+      }
+    };
+
+    step();
+    successTimerRef.current = setInterval(step, 18);
+    return clearSuccessTimer;
+  }, [awaitingSuccessCompletion, clearSuccessTimer, floatingNote]);
   const advanceLine = useCallback(() => {
     if (!lines.length) return;
     if (brewStepActive) return;
@@ -329,9 +377,9 @@ export default function CafeScene() {
       setManagedFloatingNote({
         id: `success-${Date.now()}`,
         type: "success",
-        title: `${activeRecipe.label} siap disajikan`,
-        body: `Campuran: ${successList}`,
-        duration: 3000,
+        title: "Selamat!",
+        body: `Kamu berhasil membuat ${activeRecipe.label}.\nCampuran: ${successList}`,
+        duration: 3600,
       });
       handleBrewComplete();
       return;
@@ -414,11 +462,14 @@ export default function CafeScene() {
   }, [currentLine]);
 
   const floatingTone = useMemo(() => NOTE_TONES[floatingNote?.type] ?? DEFAULT_NOTE_TONE, [floatingNote]);
-  const floatingPositionStyle = useMemo(() => (
-  showPanels
-    ? { top: "6%", left: "4%", transform: "none" }
-    : { top: "8%", left: "4%", transform: "none" }
-), [showPanels]);
+  const floatingPositionStyle = useMemo(() => {
+    if (floatingNote?.type === "success") {
+      return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    }
+    return showPanels
+      ? { top: "6%", left: "4%", transform: "none" }
+      : { top: "8%", left: "4%", transform: "none" };
+  }, [floatingNote, showPanels]);
 
   const backgroundStyle = useMemo(() => ({
     position: "absolute",
@@ -490,10 +541,10 @@ export default function CafeScene() {
             padding: "12px 16px 10px",
             borderRadius: 12,
             boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
-            width: "min(320px, 70vw)",
+            width: "min(360px, 80vw)",
             background: floatingTone.background,
             border: `2px solid ${floatingTone.border}`,
-            fontFamily: "'VT323', monospace",
+            fontFamily: "'Press Start 2P', monospace",
             color: "#2b2312",
             pointerEvents: "auto",
             ...floatingPositionStyle,
@@ -517,15 +568,66 @@ export default function CafeScene() {
           >
             x
           </button>
-          {floatingNote.title && (
-            <div style={{ fontSize: 18, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
-              {floatingNote.title}
-            </div>
-          )}
-          {floatingNote.body && (
-            <div style={{ fontSize: 20, lineHeight: 1.15, whiteSpace: "pre-line" }}>
-              {floatingNote.body}
-            </div>
+          {floatingNote.type === "success" ? (
+            <>
+              {floatingNote.title && (
+                <div style={{ fontSize: 14, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1.5 }}>
+                  {floatingNote.title}
+                </div>
+              )}
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <img
+                  src={jamuCupImg}
+                  alt="gelas jamu"
+                  style={{ width: 68, height: "auto", imageRendering: "pixelated" }}
+                />
+                <div style={{ fontSize: 14, lineHeight: 1.4, whiteSpace: "pre-line" }}>
+                  {(floatingNote.body ? floatingNote.body.split("\n") : []).map((line, idx) => (
+                    <div key={`success-line-${idx}`}>
+                      {line}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 10, fontSize: 12 }}>
+                <div
+                  style={{
+                    position: "relative",
+                    flex: 1,
+                    height: 12,
+                    border: "2px solid rgba(0,0,0,0.4)",
+                    borderRadius: 6,
+                    overflow: "hidden",
+                    background: "rgba(0,0,0,0.08)",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${successProgress}%`,
+                      height: "100%",
+                      background: "rgba(46, 204, 113, 0.85)",
+                      transition: "width 0.12s ease-out",
+                    }}
+                  />
+                </div>
+                <div style={{ minWidth: 60, textAlign: "right" }}>
+                  {successMarkVisible ? "✓" : `${successProgress}%`}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {floatingNote.title && (
+                <div style={{ fontSize: 14, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1.5 }}>
+                  {floatingNote.title}
+                </div>
+              )}
+              {floatingNote.body && (
+                <div style={{ fontSize: 14, lineHeight: 1.4, whiteSpace: "pre-line" }}>
+                  {floatingNote.body}
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

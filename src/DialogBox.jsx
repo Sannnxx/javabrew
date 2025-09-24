@@ -1,14 +1,70 @@
-import React, { useEffect } from "react";
+
+import React, { useEffect, useRef, useState, useCallback } from "react";
+
+const TYPING_INTERVAL = 24;
 
 export default function DialogBox({ line, onNext, disabled = false }) {
+  const fullText = line?.text ?? "";
+  const [displayedText, setDisplayedText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef(null);
+
+  const stopTyping = useCallback(() => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+    setIsTyping(false);
+  }, []);
+
+  useEffect(() => {
+    stopTyping();
+    if (!line) {
+      setDisplayedText("");
+      return undefined;
+    }
+
+    if (!fullText) {
+      setDisplayedText("");
+      return undefined;
+    }
+
+    setDisplayedText("");
+    setIsTyping(true);
+
+    let index = 0;
+    const typeNext = () => {
+      index += 1;
+      setDisplayedText(fullText.slice(0, index));
+      if (index < fullText.length) {
+        typingTimeoutRef.current = setTimeout(typeNext, TYPING_INTERVAL);
+      } else {
+        stopTyping();
+      }
+    };
+
+    typingTimeoutRef.current = setTimeout(typeNext, TYPING_INTERVAL);
+    return () => stopTyping();
+  }, [fullText, line, stopTyping]);
+
+  const handleAdvance = useCallback(() => {
+    if (disabled) return;
+    if (isTyping) {
+      stopTyping();
+      setDisplayedText(fullText);
+      return;
+    }
+    onNext?.();
+  }, [disabled, fullText, isTyping, onNext, stopTyping]);
+
   useEffect(() => {
     if (disabled) return undefined;
     const h = (e) => {
-      if (e.key === "Enter" || e.key === " ") onNext?.();
+      if (e.key === "Enter" || e.key === " ") handleAdvance();
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [onNext, disabled]);
+  }, [handleAdvance, disabled]);
 
   if (!line) return null;
 
@@ -19,12 +75,12 @@ export default function DialogBox({ line, onNext, disabled = false }) {
         cursor: disabled ? "default" : "pointer",
         opacity: disabled ? 0.65 : 1,
       }}
-      onClick={disabled ? undefined : onNext}
+      onClick={disabled ? undefined : handleAdvance}
     >
       {line.speaker && <div style={styles.title}>{line.speaker}</div>}
-      <div style={styles.text}>{line.text}</div>
+      <div style={styles.text}>{displayedText}</div>
       <div style={styles.hint}>
-        {disabled ? "Selesaikan racikan untuk lanjut" : "[Enter] untuk lanjut"}
+        {disabled ? "Selesaikan racikan untuk lanjut" : (isTyping ? "[Enter] untuk skip" : "[Enter] untuk lanjut")}
       </div>
     </div>
   );
@@ -42,4 +98,3 @@ const styles = {
   text:  { fontSize: 22, lineHeight: 1.05 },
   hint:  { fontFamily: "'Press Start 2P', monospace", fontSize: 10, opacity: .7, marginTop: 6, textAlign: "right" },
 };
-
